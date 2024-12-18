@@ -1,15 +1,21 @@
 # Kafka mock gen
 
-Project goal is to create fast event producer
+Project goal is to create fast and easy to use message producer for kafka
 
-Invoking 
+## prerequisites
+
+1) Kafka kluster
+Fast and easy way is to run it in docker e.g. use my 
+[docker-compose kafka docker dev repository](https://github.com/tomaszkubacki/kafka_docker_dev) 
+
+2) librdkafka-dev
+
+e.g. on Debian/Ubuntu install with
+
+sudo apt install librdkafka-dev
+
+## usage
 ```
-kafka_mock_gen 
+cargo run -- -b localhost:9092 -t topic-1 -m '{"a": 2}' -c 200
 ```
 
-
-### Kafka hight level api block time
-
-It seems every message is blocked for at least 100 ms
-
-So the minimum time is for 1K messages: 100s ???
