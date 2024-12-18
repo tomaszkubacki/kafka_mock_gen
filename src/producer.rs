@@ -5,11 +5,15 @@ use log::debug;
 use log::info;
 
 use rdkafka::config::ClientConfig;
-use rdkafka::message::Header;
-use rdkafka::message::OwnedHeaders;
 use rdkafka::producer::{FutureProducer, FutureRecord};
 
-pub async fn produce(brokers: &str, topic_name: &str, message: &str, message_count: i32) {
+pub async fn produce(
+    brokers: &str,
+    topic_name: &str,
+    message: &str,
+    key: &str,
+    message_count: i32,
+) {
     let producer: &FutureProducer = &ClientConfig::new()
         .set("bootstrap.servers", brokers)
         .set("message.timeout.ms", "5000")
@@ -21,13 +25,7 @@ pub async fn produce(brokers: &str, topic_name: &str, message: &str, message_cou
         .map(|i| async move {
             let delivery_status = producer
                 .send(
-                    FutureRecord::to(topic_name)
-                        .payload(message)
-                        .key(&format!("Key {}", i))
-                        .headers(OwnedHeaders::new().insert(Header {
-                            key: "header_key",
-                            value: Some("header_value"),
-                        })),
+                    FutureRecord::to(topic_name).payload(message).key(key),
                     Duration::from_secs(0),
                 )
                 .await;

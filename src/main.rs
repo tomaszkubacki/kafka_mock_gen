@@ -23,6 +23,10 @@ struct Args {
     #[arg(short, long)]
     message: String,
 
+    /// message key
+    #[arg(short, long, default_value_t = String::from(""))]
+    key: String,
+
     /// Number of messages to publish
     #[arg(short, long, default_value_t = 1)]
     count: i32,
@@ -36,5 +40,12 @@ async fn main() {
     let (version_n, version_s) = get_rdkafka_version();
     info!("rd_kafka_version: 0x{:08x}, {}", version_n, version_s);
 
-    produce(&args.brokers, &args.topic, &args.message, args.count).await;
+    produce(
+        &args.brokers,
+        &args.topic,
+        &args.message,
+        &args.key,
+        args.count,
+    )
+    .await;
 }

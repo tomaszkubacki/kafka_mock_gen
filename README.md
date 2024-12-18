@@ -15,7 +15,15 @@ e.g. on Debian/Ubuntu install with
 sudo apt install librdkafka-dev
 
 ## usage
+
+display all usage options with
 ```
-cargo run -- -b localhost:9092 -t topic-1 -m '{"a": 2}' -c 200
+cargo run -- --help
+```
+
+or invoke directly with
+
+```
+cargo run -- -b localhost:9092 -t topic-1 -m '{"a": 2}' -k "1234567890" -c 200
 ```
 
