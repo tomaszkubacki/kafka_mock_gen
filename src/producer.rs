@@ -7,6 +7,7 @@ use log::info;
 use rdkafka::config::ClientConfig;
 use rdkafka::producer::{FutureProducer, FutureRecord};
 
+#[allow(dead_code)]
 pub async fn produce(
     brokers: &str,
     topic_name: &str,
