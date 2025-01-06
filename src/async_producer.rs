@@ -1,6 +1,5 @@
 use log::error;
 use log::info;
-use log::warn;
 use rdkafka::types::RDKafkaErrorCode;
 use std::thread;
 use std::time;
@@ -34,9 +33,7 @@ pub async fn produce(
     for _ in 0..message_count {
         loop {
             match producer.send(BaseRecord::to(topic_name).key(key).payload(message)) {
-                Ok(_) => {
-                    break;
-                }
+                Ok(_) => break,
                 Err((err, _record)) => {
                     if err.rdkafka_error_code().unwrap() == RDKafkaErrorCode::QueueFull {
                         // warn!("Queue full, retrying...");
