@@ -7,6 +7,8 @@ use rdkafka::producer::{
     BaseRecord, DefaultProducerContext, NoCustomPartitioner, Producer, ThreadedProducer,
 };
 
+const FLUSH_TIME_SECS: u64 = 20;
+
 pub async fn produce(
     brokers: &str,
     topic_name: &str,
@@ -21,10 +23,12 @@ pub async fn produce(
             .create()
             .expect("Producer creation error");
 
-    for i in 0..message_count {
+    for _ in 0..message_count {
         let _ = producer.send(BaseRecord::to(topic_name).payload(message).key(key));
     }
-    producer.flush(Duration::from_secs(10)).unwrap();
+    producer
+        .flush(Duration::from_secs(FLUSH_TIME_SECS))
+        .unwrap();
 
     let before = Instant::now();
 

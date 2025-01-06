@@ -1,7 +1,5 @@
 mod async_producer;
 mod config;
-mod producer;
-
 use log::info;
 
 use crate::async_producer::produce;
