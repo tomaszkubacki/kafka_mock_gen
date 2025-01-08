@@ -14,6 +14,18 @@ e.g. on Debian/Ubuntu install with
 
 sudo apt install librdkafka-dev
 
+### cross compile to windows
+install prerequisites
+```
+sudo apt-get install cmake mingw-w64
+```
+
+do compile
+
+```
+cargo build --target x86_64-pc-windows-gnu -r
+```
+
 ## usage
 
 display all usage options with
