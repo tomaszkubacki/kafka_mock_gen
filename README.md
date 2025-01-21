@@ -6,7 +6,7 @@ allowing stress kafka broker
 e.g. publish 2M messages
 
 ```bash
-cargo run -- -b localhost:9092 -t topic-1 -m '{"a": 2}' -k "1234567890" -c 200
+cargo run -- -b localhost:9092 -t topic-1 -m '{"a": 2}' -k "1234567890" -c 2000000
 ```
 
 ## prerequisites
@@ -43,14 +43,15 @@ cargo build --target x86_64-pc-windows-gnu -r
 
 ## usage
 
+
 display all usage options with --help flag
 ```bash
 cargo run -- --help
 ```
 
-or invoke directly with
+or invoke compiled version with
 
 ```
-cargo run -- -b localhost:9092 -t topic-1 -m '{"a": 2}' -k "1234567890" -c 200
+kafka_mock_gen -b 192.168.1.40:29092 -t topic-1 -m '{"a": 20000000}' -k "1234567890" -c 2000000
 ```
 
