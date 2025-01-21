@@ -1,26 +1,35 @@
 # Kafka mock gen
 
-Project goal is to create fast and easy to use message producer for kafka
+Project goal is to create fast and easy to use message producer for kafka 
+allowing stress kafka broker
 
 ## prerequisites
 
-1) Kafka kluster
+1) Kafka dev broker
 Fast and easy way is to run it in a docker e.g. use my 
 [docker-compose kafka docker dev repository](https://github.com/tomaszkubacki/kafka_docker_dev) 
 
 2) librdkafka-dev
 
 e.g. on Debian/Ubuntu install with
-
+```bash
 sudo apt install librdkafka-dev
+```
+
+## build release
+
+```
+cargo build -r
+```
 
 ### cross compile to windows
+
 install prerequisites
 ```
 sudo apt-get install cmake mingw-w64
 ```
 
-do compile
+#### compile with target
 
 ```
 cargo build --target x86_64-pc-windows-gnu -r
