@@ -16,9 +16,9 @@ const FLUSH_TIME_SECS: u64 = 30;
 pub async fn produce(
     brokers: &str,
     topic_name: &str,
-    message: &str,
-    key: &str,
-    message_count: i32,
+    messages: &Vec<String>,
+    keys: &Vec<String>,
+    message_count: usize,
 ) {
     let producer: &ThreadedProducer<DefaultProducerContext, NoCustomPartitioner> =
         &ClientConfig::new()
@@ -29,9 +29,14 @@ pub async fn produce(
 
     info!("publishing {:?} messages", message_count);
     let before = Instant::now();
+    let keys_len = keys.len();
+    let messages_len = messages.len();
 
-    for _ in 0..message_count {
+    for n in 1..=message_count {
         loop {
+            let key = &keys[n % keys_len];
+            let message = &messages[n % messages_len];
+
             match producer.send(BaseRecord::to(topic_name).key(key).payload(message)) {
                 Ok(_) => break,
                 Err((err, _record)) => {

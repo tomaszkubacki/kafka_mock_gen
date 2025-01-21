@@ -18,17 +18,17 @@ struct Args {
     #[arg(short, long)]
     topic: String,
 
-    /// message to publish
+    /// message to publish (can be multiple)
     #[arg(short, long)]
-    message: String,
+    message: Vec<String>,
 
-    /// message key
-    #[arg(short, long, default_value_t = String::from(""))]
-    key: String,
+    /// message key (can be multiple)
+    #[arg(short, long)]
+    key: Vec<String>,
 
     /// Number of messages to publish
     #[arg(short, long, default_value_t = 1)]
-    count: i32,
+    count: usize,
 }
 
 #[tokio::main]
@@ -38,6 +38,7 @@ async fn main() {
     setup_logger(true, Option::Some("rdkafka=info"));
     let (version_n, version_s) = get_rdkafka_version();
     info!("rd_kafka_version: 0x{:08x}, {}", version_n, version_s);
+
     produce(
         &args.brokers,
         &args.topic,
