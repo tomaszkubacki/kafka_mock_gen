@@ -1,10 +1,11 @@
 mod async_producer;
 mod config;
-use log::info;
+mod repeat_times;
 
 use crate::async_producer::produce;
 use crate::config::setup_logger;
-use clap::Parser;
+use clap::{arg, Parser};
+use log::info;
 use rdkafka::util::get_rdkafka_version;
 
 #[derive(Parser, Debug)]
@@ -29,6 +30,14 @@ struct Args {
     /// Number of messages to publish
     #[arg(short, long, default_value_t = 1)]
     count: usize,
+
+    /// Number of repeate or infinite
+    #[arg(short, long, default_value_t = String::from("1"))]
+    repeat: String,
+
+    /// Delay between repeats in ms
+    #[arg(short, long, default_value_t = 0)]
+    delay: u64,
 }
 
 #[tokio::main]
@@ -38,6 +47,11 @@ async fn main() {
     setup_logger(true, Option::Some("rdkafka=info"));
     let (version_n, version_s) = get_rdkafka_version();
     info!("rd_kafka_version: 0x{:08x}, {}", version_n, version_s);
+    let repeat_times = if args.repeat == String::from("infinite") || args.repeat == "i" {
+        repeat_times::RepeatTimes::Infinite
+    } else {
+        repeat_times::RepeatTimes::Times(args.repeat.parse::<usize>().unwrap())
+    };
 
     produce(
         &args.brokers,
@@ -45,6 +59,8 @@ async fn main() {
         &args.message,
         &args.key,
         args.count,
+        repeat_times,
+        args.delay,
     )
     .await;
 }
