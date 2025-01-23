@@ -31,18 +31,24 @@ cargo build -r
 ### cross compile to windows
 
 install prerequisites
+
 ```bash
 sudo apt-get install cmake mingw-w64
 ```
 
-#### compile with target
+add windows as target build
+
+```bash
+rustup target add x86_64-pc-windows-gnu
+```
+
+compile with target 
 
 ```bash
 cargo build --target x86_64-pc-windows-gnu -r
 ```
 
 ## usage
-
 
 display all usage options with --help flag
 ```bash
