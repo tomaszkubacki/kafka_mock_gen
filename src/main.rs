@@ -46,8 +46,8 @@ async fn main() {
 
     setup_logger(true, Option::Some("rdkafka=info"));
     let (version_n, version_s) = get_rdkafka_version();
-    info!("rd_kafka_version: 0x{:08x}, {}", version_n, version_s);
-    let repeat_times = if args.repeat == String::from("infinite") || args.repeat == "i" {
+    info!("rd_kafka_version: 0x{version_n:08x}, {version_s}");
+    let repeat_times = if args.repeat == "infinite" || args.repeat == "i" {
         repeat_times::RepeatTimes::Infinite
     } else {
         repeat_times::RepeatTimes::Times(args.repeat.parse::<usize>().unwrap())

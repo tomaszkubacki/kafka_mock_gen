@@ -19,8 +19,8 @@ const FLUSH_TIME_SECS: u64 = 30;
 pub async fn produce(
     brokers: &str,
     topic_name: &str,
-    messages: &Vec<String>,
-    keys: &Vec<String>,
+    messages: &[String],
+    keys: &[String],
     message_count: usize,
     repeat_times: crate::repeat_times::RepeatTimes,
     delay: u64,
@@ -32,7 +32,7 @@ pub async fn produce(
             .create()
             .expect("Producer creation error");
 
-    info!("publishing {:?} messages", message_count);
+    info!("publishing {message_count:?} messages");
     let keys_len = keys.len();
     let messages_len = messages.len();
     let mut repeat_count = 0;
@@ -48,10 +48,9 @@ pub async fn produce(
                     Ok(_) => break,
                     Err((err, _record)) => {
                         if err.rdkafka_error_code().unwrap() == RDKafkaErrorCode::QueueFull {
-                            // warn!("Queue full, retrying...");
                             thread::sleep(time::Duration::from_millis(200));
                         } else {
-                            error!("Failed to enqueue message: {:?}", err);
+                            error!("Failed to enqueue message: {err:?}");
                             break; // Exit the loop on other errors
                         }
                     }

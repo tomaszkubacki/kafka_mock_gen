@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-rdkafka = { version = "0.37", features = [ "cmake-build"] }
-tokio = { version = "1.18", features = ["macros", "rt-multi-thread", "time"] }
+rdkafka = { version = "0.38", features = [ "cmake-build"] }
+tokio = { version = "1.47.1", features = ["macros", "rt-multi-thread", "time"] }
 log = "0.4"
 clap = { version = "4.5.23", features = ["derive"] }
 chrono = "0.4.39"
