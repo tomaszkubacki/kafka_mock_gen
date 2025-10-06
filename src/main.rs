@@ -1,11 +1,12 @@
 mod async_producer;
 mod config;
+mod file_utils;
 mod repeat_times;
 
-use crate::async_producer::produce;
 use crate::config::setup_logger;
+use crate::{async_producer::produce, file_utils::read_lines};
 use clap::{arg, Parser};
-use log::info;
+use log::{error, info};
 use rdkafka::util::get_rdkafka_version;
 
 #[derive(Parser, Debug)]
@@ -38,11 +39,15 @@ struct Args {
     /// Delay between repeats in ms
     #[arg(short, long, default_value_t = 0)]
     delay: u64,
+
+    /// File containing messages (one per line)
+    #[arg(short = 'f', long = "file")]
+    file: Option<String>,
 }
 
 #[tokio::main]
 async fn main() {
-    let args = Args::parse();
+    let mut args = Args::parse();
 
     setup_logger(true, Option::Some("rdkafka=info"));
     let (version_n, version_s) = get_rdkafka_version();
@@ -53,6 +58,20 @@ async fn main() {
         repeat_times::RepeatTimes::Times(args.repeat.parse::<usize>().unwrap())
     };
 
+    // If file is provided, read messages from file
+    if let Some(ref file_path) = args.file {
+        match read_lines(file_path) {
+            Ok(lines) => {
+                args.message = lines;
+            }
+            Err(e) => {
+                error!("Error reading message file: {e}");
+                std::process::exit(1);
+            }
+        }
+    }
+
+    info!("arg {args:?}");
     produce(
         &args.brokers,
         &args.topic,

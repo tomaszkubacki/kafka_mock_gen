@@ -41,7 +41,11 @@ pub async fn produce(
         let before = Instant::now();
         for n in 1..=message_count {
             loop {
-                let key = &keys[n % keys_len];
+                let key = if keys_len == 0 {
+                    &n.to_string()
+                } else {
+                    &keys[n % keys_len]
+                };
                 let message = &messages[n % messages_len];
 
                 match producer.send(BaseRecord::to(topic_name).key(key).payload(message)) {
