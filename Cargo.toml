@@ -1,5 +1,5 @@
 [package]
-name = "kafka_mock_gen"
+name = "kafka-mock-gen"
 version = "0.1.1"
 edition = "2021"
 
